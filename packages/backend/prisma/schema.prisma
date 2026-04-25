@@ -1,0 +1,13 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Modelo inicial para permitir migrações; substitua pelos modelos de domínio.
+model SchemaPlaceholder {
+  id String @id @default(uuid())
+}

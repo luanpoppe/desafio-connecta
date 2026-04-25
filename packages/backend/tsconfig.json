@@ -27,5 +27,5 @@
       "@modules/*": ["src/modules/*"]
     }
   },
-  "include": ["src/**/*", "test/**/*", "jest.config.js"]
+  "include": ["src/**/*", "test/**/*", "jest.config.js", "prisma/**/*.ts"]
 }
