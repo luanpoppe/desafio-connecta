@@ -31,17 +31,13 @@ export class PrismaUserRepository implements UserRepository {
     };
   }
 
-  async countTransactionsByUserId(userId: number): Promise<number> {
-    return this.prisma.transaction.count({
-      where: { user: { id: userId } },
+  async findExternalIdByInternalUserId(
+    internalUserId: number,
+  ): Promise<number | null> {
+    const row = await this.prisma.user.findUnique({
+      where: { id: internalUserId },
+      select: { externalId: true },
     });
-  }
-
-  async sumTransactionTotalsByUserId(userId: number): Promise<number> {
-    const agg = await this.prisma.transaction.aggregate({
-      where: { user: { id: userId } },
-      _sum: { total: true },
-    });
-    return agg._sum.total ?? 0;
+    return row?.externalId ?? null;
   }
 }

@@ -24,18 +24,11 @@ export class SyncUseCase implements OnModuleInit {
   }
 
   async syncData(): Promise<void> {
-    const [usersResponse, cartsResponse] = await Promise.all([
-      this.externalApiService.getUsers(),
-      this.externalApiService.getCarts(),
-    ]);
+    const usersResponse = await this.externalApiService.getUsers();
 
     await SyncDataHelper.persistExternalUsers(
       this.prismaService,
       usersResponse.users,
-    );
-    await SyncDataHelper.persistExternalCarts(
-      this.prismaService,
-      cartsResponse.carts,
     );
   }
 }

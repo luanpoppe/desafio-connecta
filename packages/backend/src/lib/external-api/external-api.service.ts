@@ -3,14 +3,18 @@ import { HttpService } from '@nestjs/axios';
 import {
   Injectable,
   Logger,
+  NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { isAxiosError } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import { ErrorLogFormatter } from '@/utils';
 import type {
+  CartDto,
   GetCartsResponseDto,
   GetUsersResponseDto,
 } from './dtos';
+import { cartSchema, getCartsResponseSchema } from './dtos/carts.dto';
 
 @Injectable()
 export class ExternalApiService {
@@ -70,6 +74,55 @@ export class ExternalApiService {
       );
       throw new ServiceUnavailableException(
         'Não foi possível obter carrinhos da API externa.',
+      );
+    }
+  }
+
+  /** `cartId` é o identificador do carrinho na API externa (DummyJSON). */
+  async getCartById(cartId: number): Promise<CartDto> {
+    const url = `${this.baseUrl}/carts/${cartId}`;
+    try {
+      const response = await firstValueFrom(this.httpService.get(url));
+      const data = cartSchema.parse(response.data);
+      this.logger.log(`External API getCartById ok: ${url}`);
+      return data;
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 404) {
+        throw new NotFoundException(
+          `Carrinho ${cartId} não encontrado na API externa.`,
+        );
+      }
+      ErrorLogFormatter.logError(
+        this.logger,
+        `External API getCartById failed: ${url}`,
+        err,
+      );
+      throw new ServiceUnavailableException(
+        'Não foi possível obter o carrinho da API externa.',
+      );
+    }
+  }
+
+  /** `userId` é o identificador do utilizador na API externa (DummyJSON `users.id`). */
+  async getCartsByUser(userId: number): Promise<GetCartsResponseDto> {
+    const url = `${this.baseUrl}/carts/user/${userId}`;
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get<GetCartsResponseDto>(url),
+      );
+      const data = getCartsResponseSchema.parse(response.data);
+      this.logger.log(
+        `External API getCartsByUser ok: ${url} (total=${data.total}, returned=${data.carts.length})`,
+      );
+      return data;
+    } catch (err) {
+      ErrorLogFormatter.logError(
+        this.logger,
+        `External API getCartsByUser failed: ${url}`,
+        err,
+      );
+      throw new ServiceUnavailableException(
+        'Não foi possível obter os carrinhos do utilizador na API externa.',
       );
     }
   }

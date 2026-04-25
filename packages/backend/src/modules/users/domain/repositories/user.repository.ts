@@ -8,7 +8,6 @@ import type { PaginatedUsers } from './paginated-users';
 export interface UserRepository {
   listAllPaginated(params: ListUsersParams): Promise<PaginatedUsers>;
 
-  countTransactionsByUserId(userId: number): Promise<number>;
-
-  sumTransactionTotalsByUserId(userId: number): Promise<number>;
+  /** `externalId` da API externa (DummyJSON) para o utilizador com `id` interno dado, ou `null`. */
+  findExternalIdByInternalUserId(internalUserId: number): Promise<number | null>;
 }
