@@ -5,6 +5,5 @@ export function createSwaggerConfig() {
     .setTitle('API Documentation')
     .setDescription('Documentação da API')
     .setVersion('1.0')
-    .addTag('api')
     .build();
 }
