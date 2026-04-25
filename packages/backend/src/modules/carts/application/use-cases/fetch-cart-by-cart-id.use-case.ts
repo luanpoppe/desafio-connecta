@@ -1,11 +1,18 @@
-import { ExternalApiService, type CartDto } from '@/lib/external-api';
-import { Injectable } from '@nestjs/common';
+import type { CartDto } from '@/lib/external-api';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  EXTERNAL_CARTS_GATEWAY,
+  type ExternalCartsGateway,
+} from '../gateways/external-carts.gateway';
 
 @Injectable()
 export class FetchCartByCartIdUseCase {
-  constructor(private readonly externalApi: ExternalApiService) {}
+  constructor(
+    @Inject(EXTERNAL_CARTS_GATEWAY)
+    private readonly externalCarts: ExternalCartsGateway,
+  ) {}
 
   execute(cartId: number): Promise<CartDto> {
-    return this.externalApi.getCartById(cartId);
+    return this.externalCarts.getCartById(cartId);
   }
 }
