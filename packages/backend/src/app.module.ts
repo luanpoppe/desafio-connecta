@@ -9,7 +9,10 @@ import { SyncModule } from './modules/sync/sync.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['../../.env', '.env'],
+    }),
     CoreModule,
     LibModule,
     UsersModule,
