@@ -1,14 +1,13 @@
-import { ExternalApiService } from '@/lib/external-api';
 import { Controller, HttpCode, Post } from '@nestjs/common';
+import { SyncUseCase } from './use-cases/sync.use-case';
 
 @Controller()
 export class SyncController {
-  constructor(private readonly externalApiService: ExternalApiService) {}
+  constructor(private readonly syncUseCase: SyncUseCase) {}
 
   @Post('sync-data')
   @HttpCode(204)
   async syncData() {
-    await this.externalApiService.getUsers();
-    await this.externalApiService.getCarts();
+    await this.syncUseCase.syncData();
   }
 }
