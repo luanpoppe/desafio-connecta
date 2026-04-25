@@ -9,6 +9,7 @@ export class EnvService {
       PORT: z.coerce.number().optional().default(3000),
       EXTERNAL_API_URL: z.string().min(1),
       DATABASE_URL: z.string().min(1),
+      REDIS_URL: z.string().min(1),
     });
     const { data, error } = envSchema.safeParse(process.env);
     if (error) throw new Error(`Invalid env vars: ${error.message}`);
