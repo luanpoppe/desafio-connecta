@@ -1,0 +1,33 @@
+export interface User {
+  id: number;
+  externalId: number;
+  firstName: string;
+  lastName: string;
+  maidenName: string;
+  age: number;
+  gender: string;
+  email: string;
+  phone: string;
+  username: string;
+  password: string;
+  birthDate: string;
+  image: string;
+  bloodGroup: string;
+  height: number;
+  weight: number;
+  eyeColor: string;
+  hair: unknown;
+  ip: string;
+  address: unknown;
+  macAddress: string;
+  university: string;
+  bank: unknown;
+  company: unknown;
+  ein: string;
+  ssn: string;
+  userAgent: string;
+  crypto: unknown;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
