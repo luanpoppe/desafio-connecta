@@ -1,7 +1,8 @@
-import { getCartsResponseSchema } from '@/lib/external-api/dtos/carts.dto';
+import { cartsByUserWithSummarySchema } from '@/modules/carts/application/dtos/carts-by-user-with-summary.dto';
 import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
 
-export class CartsByUserResponseDto extends createZodDto(getCartsResponseSchema) {}
+export class CartsByUserResponseDto extends createZodDto(
+  cartsByUserWithSummarySchema,
+) {}
 
-export type CartsByUserResponse = z.infer<typeof getCartsResponseSchema>;
+export type { CartsByUserWithSummaryResponse } from '@/modules/carts/application/dtos/carts-by-user-with-summary.dto';

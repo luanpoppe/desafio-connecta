@@ -1,7 +1,8 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
-import type { CartDto, GetCartsResponseDto } from '@/lib/external-api';
+import type { CartDto } from '@/lib/external-api';
 import { FetchCartByCartIdUseCase } from '../../application/use-cases/fetch-cart-by-cart-id.use-case';
 import { ListCartsByInternalUserIdUseCase } from '../../application/use-cases/list-carts-by-internal-user-id.use-case';
+import type { CartsByUserWithSummaryResponse } from '@/modules/carts/application/dtos/carts-by-user-with-summary.dto';
 import { ListCartsByUserQueryDto } from './dtos/list-carts-by-user.query.dto';
 import { CartsHttpApiTag } from './swagger/carts-http-api-tag.decorator';
 import { ApiGetLiveCartByCartId } from './swagger/get-live-cart-by-cart-id.decorator';
@@ -27,7 +28,7 @@ export class CartsController {
   @ApiListCartsByUser()
   async listByUser(
     @Query() query: ListCartsByUserQueryDto,
-  ): Promise<GetCartsResponseDto> {
+  ): Promise<CartsByUserWithSummaryResponse> {
     return this.listCartsByInternalUserId.execute(Number(query.userId));
   }
 }

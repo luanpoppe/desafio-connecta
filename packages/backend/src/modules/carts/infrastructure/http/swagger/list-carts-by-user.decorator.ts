@@ -15,7 +15,7 @@ export function ApiListCartsByUser() {
     ApiOperation({
       summary: 'Listar carrinhos do utilizador na API externa',
       description:
-        'Resolve `User.id` interno para `externalId` e devolve os carrinhos expostos pela API externa para esse utilizador.',
+        'Resolve `User.id` interno para `externalId` e devolve os carrinhos da API externa. Inclui `summary` com contagem de carrinhos no payload e soma dos campos `total` de cada carrinho (valores da mesma resposta).',
     }),
     userIdQuery,
     ApiOkResponse({
