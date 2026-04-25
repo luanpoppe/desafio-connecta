@@ -1,0 +1,16 @@
+import path from 'node:path';
+import { config as loadEnv } from 'dotenv';
+import { defineConfig, env } from 'prisma/config';
+
+// Monorepo: .env na raiz do repositório (três níveis acima desta pasta prisma/)
+loadEnv({ path: path.join(__dirname, '..', '..', '..', '.env') });
+
+export default defineConfig({
+  schema: 'schema.prisma',
+  migrations: {
+    path: 'migrations',
+  },
+  datasource: {
+    url: env('DATABASE_URL'),
+  },
+});

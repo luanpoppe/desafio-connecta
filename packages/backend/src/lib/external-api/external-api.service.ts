@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ErrorLogFormatter } from '@/utils';
-import { GetCartsResponseDto, GetUsersResponseDto } from './dtos';
+import type {
+  GetCartsResponseDto,
+  GetUsersResponseDto,
+} from './dtos';
 
 @Injectable()
 export class ExternalApiService {
@@ -21,7 +24,7 @@ export class ExternalApiService {
     this.baseUrl = this.envService.getEnvs().EXTERNAL_API_URL;
   }
 
-  async getUsers() {
+  async getUsers(): Promise<GetUsersResponseDto> {
     const url = `${this.baseUrl}/users`;
     try {
       const response = await firstValueFrom(
@@ -46,7 +49,7 @@ export class ExternalApiService {
     }
   }
 
-  async getCarts() {
+  async getCarts(): Promise<GetCartsResponseDto> {
     const url = `${this.baseUrl}/carts`;
     try {
       const response = await firstValueFrom(

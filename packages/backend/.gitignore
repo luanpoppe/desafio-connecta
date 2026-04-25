@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# Prisma Client (gerado; use pnpm prisma:generate)
+/src/generated
+
 # Logs
 logs
 *.log
