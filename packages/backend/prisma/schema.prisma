@@ -7,7 +7,85 @@ datasource db {
   provider = "postgresql"
 }
 
-/// Modelo inicial para permitir migrações; substitua pelos modelos de domínio.
-model SchemaPlaceholder {
-  id String @id @default(uuid())
+/// Dados sincronizados a partir da API externa de usuários (DummyJSON / equivalente).
+model User {
+  id         Int @id @default(autoincrement())
+  externalId Int @unique
+
+  firstName  String
+  lastName   String
+  maidenName String
+  age        Int
+  gender     String
+  email      String
+  phone      String
+  username   String
+  password   String
+  birthDate  String
+  image      String
+  bloodGroup String
+  height     Float
+  weight     Float
+  eyeColor   String
+  hair       Json
+  ip         String
+  address    Json
+  macAddress String
+  university String
+  bank       Json
+  company    Json
+  ein        String
+  ssn        String
+  userAgent  String
+  crypto     Json
+  role       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+/// Transação sincronizada a partir do recurso de “carts” da API externa (totais e metadados; linhas em `TransactionProduct`).
+model Transaction {
+  id         Int @id @default(autoincrement())
+  externalId Int @unique
+
+  userId Int
+  user   User @relation(fields: [userId], references: [externalId])
+
+  total             Float
+  discountedTotal Float
+  totalProducts     Int
+  totalQuantity     Int
+
+  products TransactionProduct[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+/// Linha de produto associada a uma transação (equivalente a um elemento do array `products` da API).
+model TransactionProduct {
+  id Int @id @default(autoincrement())
+
+  transactionId Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  /// `id` do produto no payload da API (referência ao catálogo externo).
+  productExternalId Int
+
+  title                String
+  price                Float
+  quantity             Int
+  total                Float
+  discountPercentage   Float
+  discountedTotal      Float
+  thumbnail            String
+
+  @@map("transaction_products")
 }
