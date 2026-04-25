@@ -12,14 +12,17 @@ import { GetCartsResponseDto, GetUsersResponseDto } from './dtos';
 @Injectable()
 export class ExternalApiService {
   private readonly logger = new Logger(ExternalApiService.name);
+  private readonly baseUrl: string;
 
   constructor(
     private readonly httpService: HttpService,
     private readonly envService: EnvService,
-  ) {}
+  ) {
+    this.baseUrl = this.envService.getEnvs().EXTERNAL_API_URL;
+  }
 
   async getUsers() {
-    const url = `${this.envService.getEnvs().EXTERNAL_API_URL}/users`;
+    const url = `${this.baseUrl}/users`;
     try {
       const response = await firstValueFrom(
         this.httpService.get<GetUsersResponseDto>(url),
@@ -44,7 +47,7 @@ export class ExternalApiService {
   }
 
   async getCarts() {
-    const url = `${this.envService.getEnvs().EXTERNAL_API_URL}/carts`;
+    const url = `${this.baseUrl}/carts`;
     try {
       const response = await firstValueFrom(
         this.httpService.get<GetCartsResponseDto>(url),
