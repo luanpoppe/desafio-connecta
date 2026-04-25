@@ -1,6 +1,10 @@
 import { EnvService } from '@/core/env.service';
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ErrorLogFormatter } from '@/utils';
 import { GetCartsResponseDto, GetUsersResponseDto } from './dtos';
@@ -20,7 +24,13 @@ export class ExternalApiService {
       const response = await firstValueFrom(
         this.httpService.get<GetUsersResponseDto>(url),
       );
-      return response.data;
+
+      const data = response.data;
+      this.logger.log(
+        `External API getUsers ok: ${url} (total=${data.total}, returned=${data.users.length})`,
+      );
+
+      return data;
     } catch (err) {
       ErrorLogFormatter.logError(
         this.logger,
@@ -39,7 +49,13 @@ export class ExternalApiService {
       const response = await firstValueFrom(
         this.httpService.get<GetCartsResponseDto>(url),
       );
-      return response.data;
+
+      const data = response.data;
+      this.logger.log(
+        `External API getCarts ok: ${url} (total=${data.total}, returned=${data.carts.length})`,
+      );
+
+      return data;
     } catch (err) {
       ErrorLogFormatter.logError(
         this.logger,
