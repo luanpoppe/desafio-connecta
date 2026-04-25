@@ -1,7 +1,10 @@
-import { ExternalApiService } from '@/lib/external-api';
 import { USER_REPOSITORY } from '@/modules/users/domain/repositories/user.repository.token';
 import type { UserRepository } from '@/modules/users/domain/repositories/user.repository';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  EXTERNAL_CARTS_GATEWAY,
+  type ExternalCartsGateway,
+} from '../gateways/external-carts.gateway';
 import type { CartsByUserWithSummaryResponse } from '../dtos/carts-by-user-with-summary.dto';
 import { CartsByUserWithSummaryMapper } from '../mappers/carts-by-user-with-summary.mapper';
 
@@ -10,7 +13,8 @@ export class ListCartsByInternalUserIdUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
-    private readonly externalApi: ExternalApiService,
+    @Inject(EXTERNAL_CARTS_GATEWAY)
+    private readonly externalCarts: ExternalCartsGateway,
   ) {}
 
   async execute(
@@ -24,7 +28,7 @@ export class ListCartsByInternalUserIdUseCase {
         `Utilizador com id ${internalUserId} não encontrado.`,
       );
     }
-    const data = await this.externalApi.getCartsByUser(externalUserId);
+    const data = await this.externalCarts.getCartsByUser(externalUserId);
     return CartsByUserWithSummaryMapper.toWithSummary(data);
   }
 }
