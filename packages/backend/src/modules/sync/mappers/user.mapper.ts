@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { ExternalUserDto } from '@/lib/external-api';
 
-export type UserFields = Omit<Prisma.UserCreateInput, 'externalId' | 'transactions'>;
+export type UserFields = Omit<Prisma.UserCreateInput, 'externalId'>;
 
 export class ExternalUserToPrismaMapper {
   static map(dto: ExternalUserDto): UserFields {

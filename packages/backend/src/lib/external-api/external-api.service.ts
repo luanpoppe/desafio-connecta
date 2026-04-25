@@ -14,7 +14,7 @@ import type {
   GetCartsResponseDto,
   GetUsersResponseDto,
 } from './dtos';
-import { cartSchema } from './dtos/carts.dto';
+import { cartSchema, getCartsResponseSchema } from './dtos/carts.dto';
 
 @Injectable()
 export class ExternalApiService {
@@ -78,7 +78,7 @@ export class ExternalApiService {
     }
   }
 
-  /** `cartId` é o identificador do carrinho na API externa (ex.: `Transaction.externalId`). */
+  /** `cartId` é o identificador do carrinho na API externa (DummyJSON). */
   async getCartById(cartId: number): Promise<CartDto> {
     const url = `${this.baseUrl}/carts/${cartId}`;
     try {
@@ -99,6 +99,30 @@ export class ExternalApiService {
       );
       throw new ServiceUnavailableException(
         'Não foi possível obter o carrinho da API externa.',
+      );
+    }
+  }
+
+  /** `userId` é o identificador do utilizador na API externa (DummyJSON `users.id`). */
+  async getCartsByUser(userId: number): Promise<GetCartsResponseDto> {
+    const url = `${this.baseUrl}/carts/user/${userId}`;
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get<GetCartsResponseDto>(url),
+      );
+      const data = getCartsResponseSchema.parse(response.data);
+      this.logger.log(
+        `External API getCartsByUser ok: ${url} (total=${data.total}, returned=${data.carts.length})`,
+      );
+      return data;
+    } catch (err) {
+      ErrorLogFormatter.logError(
+        this.logger,
+        `External API getCartsByUser failed: ${url}`,
+        err,
+      );
+      throw new ServiceUnavailableException(
+        'Não foi possível obter os carrinhos do utilizador na API externa.',
       );
     }
   }

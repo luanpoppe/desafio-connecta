@@ -1,38 +1,33 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
-import type { CartDto } from '@/lib/external-api';
-import { FetchLiveCartByTransactionDbIdUseCase } from '../../application/use-cases/fetch-live-cart-by-transaction-db-id.use-case';
-import { ListTransactionsByUserDbIdUseCase } from '../../application/use-cases/list-transactions-by-user-db-id.use-case';
-import { ListTransactionsQueryDto } from './dtos/list-transactions.query.dto';
-import type { ListTransactionsResponse } from './dtos/transactions-list.response.dto';
-import { TransactionsListResponseMapper } from '../mappers/transactions-list-response.mapper';
+import type { CartDto, GetCartsResponseDto } from '@/lib/external-api';
+import { FetchCartByCartIdUseCase } from '../../application/use-cases/fetch-cart-by-cart-id.use-case';
+import { ListCartsByInternalUserIdUseCase } from '../../application/use-cases/list-carts-by-internal-user-id.use-case';
+import { ListCartsByUserQueryDto } from './dtos/list-carts-by-user.query.dto';
 import { CartsHttpApiTag } from './swagger/carts-http-api-tag.decorator';
-import { ApiGetLiveCartByTransactionDbId } from './swagger/get-live-cart-by-transaction-db-id.decorator';
-import { ApiListTransactionsByUser } from './swagger/list-transactions-by-user.decorator';
+import { ApiGetLiveCartByCartId } from './swagger/get-live-cart-by-cart-id.decorator';
+import { ApiListCartsByUser } from './swagger/list-carts-by-user.decorator';
 
 @CartsHttpApiTag()
-@Controller('transactions')
+@Controller('carts')
 export class CartsController {
   constructor(
-    private readonly fetchLiveCartByTransactionDbId: FetchLiveCartByTransactionDbIdUseCase,
-    private readonly listTransactionsByUserDbId: ListTransactionsByUserDbIdUseCase,
+    private readonly fetchLiveCartByCartId: FetchCartByCartIdUseCase,
+    private readonly listCartsByInternalUserId: ListCartsByInternalUserIdUseCase,
   ) {}
 
-  @Get(':transactionDbId/live')
-  @ApiGetLiveCartByTransactionDbId()
-  async getLiveCartByTransactionDbId(
-    @Param('transactionDbId', ParseIntPipe) transactionDbId: number,
+  @Get(':cartId')
+  @ApiGetLiveCartByCartId()
+  async getLiveCart(
+    @Param('cartId', ParseIntPipe) cartId: number,
   ): Promise<CartDto> {
-    return this.fetchLiveCartByTransactionDbId.execute(transactionDbId);
+    return this.fetchLiveCartByCartId.execute(cartId);
   }
 
-  @Get('')
-  @ApiListTransactionsByUser()
-  async listTransactionsByUser(
-    @Query() query: ListTransactionsQueryDto,
-  ): Promise<ListTransactionsResponse> {
-    const items = await this.listTransactionsByUserDbId.execute(
-      Number(query.userId),
-    );
-    return TransactionsListResponseMapper.toHttp(items);
+  @Get()
+  @ApiListCartsByUser()
+  async listByUser(
+    @Query() query: ListCartsByUserQueryDto,
+  ): Promise<GetCartsResponseDto> {
+    return this.listCartsByInternalUserId.execute(Number(query.userId));
   }
 }
