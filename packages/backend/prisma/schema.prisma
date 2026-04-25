@@ -87,5 +87,6 @@ model TransactionProduct {
   discountedTotal      Float
   thumbnail            String
 
+  @@unique([transactionId, productExternalId])
   @@map("transaction_products")
 }

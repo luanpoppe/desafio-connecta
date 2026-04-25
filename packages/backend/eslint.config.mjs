@@ -6,7 +6,9 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs', 'jest.config.js', 'src/generated/**'],
+    // Não ignorar `src/generated`: o project service precisa desses ficheiros para
+    // resolver tipos do Prisma em código de aplicação (evita tipo `error` / no-unsafe-*).
+    ignores: ['eslint.config.mjs', 'jest.config.js'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -36,6 +38,18 @@ export default tseslint.config(
       'prettier/prettier': ['off', { endOfLine: 'auto' }],
       '@typescript-eslint/no-unsafe-call': 'warn',
       '@typescript-eslint/no-unsafe-member-access': 'warn',
+    },
+  },
+  {
+    files: ['src/generated/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
     },
   },
 );
