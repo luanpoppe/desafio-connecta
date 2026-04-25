@@ -3,14 +3,18 @@ import { HttpService } from '@nestjs/axios';
 import {
   Injectable,
   Logger,
+  NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { isAxiosError } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import { ErrorLogFormatter } from '@/utils';
 import type {
+  CartDto,
   GetCartsResponseDto,
   GetUsersResponseDto,
 } from './dtos';
+import { cartSchema } from './dtos/carts.dto';
 
 @Injectable()
 export class ExternalApiService {
@@ -70,6 +74,31 @@ export class ExternalApiService {
       );
       throw new ServiceUnavailableException(
         'Não foi possível obter carrinhos da API externa.',
+      );
+    }
+  }
+
+  /** `cartId` é o identificador do carrinho na API externa (ex.: `Transaction.externalId`). */
+  async getCartById(cartId: number): Promise<CartDto> {
+    const url = `${this.baseUrl}/carts/${cartId}`;
+    try {
+      const response = await firstValueFrom(this.httpService.get(url));
+      const data = cartSchema.parse(response.data);
+      this.logger.log(`External API getCartById ok: ${url}`);
+      return data;
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 404) {
+        throw new NotFoundException(
+          `Carrinho ${cartId} não encontrado na API externa.`,
+        );
+      }
+      ErrorLogFormatter.logError(
+        this.logger,
+        `External API getCartById failed: ${url}`,
+        err,
+      );
+      throw new ServiceUnavailableException(
+        'Não foi possível obter o carrinho da API externa.',
       );
     }
   }
