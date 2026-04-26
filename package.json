@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter \"./packages/backend\" --filter \"./packages/frontend\" --parallel run dev"
+    "dev": "pnpm --filter \"./packages/backend\" --filter \"./packages/frontend\" --parallel run dev",
+    "build": "pnpm --filter \"./packages/frontend...\" run build"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

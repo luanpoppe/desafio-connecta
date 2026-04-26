@@ -7,5 +7,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "noEmit": true
-  }
+  },
+  "exclude": ["node_modules", "packages/design-system/playground"]
 }
