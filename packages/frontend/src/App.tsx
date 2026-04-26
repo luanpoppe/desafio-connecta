@@ -1,5 +1,7 @@
+import { CustomersPage } from "./pages/CustomersPage";
+
 function App() {
-  return <h1 className="text-red-500">Olá</h1>;
+  return <CustomersPage />;
 }
 
 export default App;

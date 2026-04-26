@@ -54,7 +54,7 @@ function NavButton({
       disabled={disabled}
       aria-label={label}
       className={cn(
-        "size-7 flex items-center justify-center rounded-[var(--radius-sm)]",
+        "size-7 flex cursor-pointer items-center justify-center rounded-[var(--radius-sm)]",
         "text-text-secondary transition-colors duration-150 outline-none",
         "hover:bg-neutral-100 hover:text-text",
         "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1",
