@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom";
 
+process.env.VITE_API_BASE_URL ??= "http://127.0.0.1:9";
+
 // Polyfill TextEncoder and TextDecoder
 import { TextEncoder, TextDecoder } from "util";
 
