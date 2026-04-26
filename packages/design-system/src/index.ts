@@ -37,4 +37,7 @@ export {
   PanelFooter,
 } from "./components/Panel/Panel";
 
+export { Modal } from "./components/Modal/Modal";
+export type { ModalProps } from "./components/Modal/Modal";
+
 export { cn } from "./utils/cn";
