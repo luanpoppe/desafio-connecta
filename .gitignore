@@ -34,6 +34,8 @@ coverage
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/tailwind-v4.css-data.json
+.cursor
 
 # Google OAuth credentials (never commit)
 credentials.json
