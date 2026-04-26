@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 
 const inputVariants = cva(
   [
-    "w-full rounded-full border bg-white text-sm text-text font-[450]",
+    "w-full rounded-full border border-border/90 bg-surface text-sm text-text font-[450]",
     "placeholder:text-text-muted placeholder:font-normal",
     "transition-all duration-150 outline-none",
     "shadow-[0_1px_2px_oklch(0%_0_0/0.05),inset_0_1px_2px_oklch(0%_0_0/0.03)]",

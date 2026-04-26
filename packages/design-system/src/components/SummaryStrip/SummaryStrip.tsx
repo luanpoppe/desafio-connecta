@@ -6,6 +6,8 @@ interface SummaryItem {
   value: string | number;
   subValue?: string;
   trend?: "up" | "down";
+  /** "accent": valor principal, ex. totais (usa cor de ênfase da paleta) */
+  valueEmphasis?: "default" | "accent";
 }
 
 interface SummaryStripProps {
@@ -17,9 +19,9 @@ export function SummaryStrip({ items, className }: SummaryStripProps) {
   return (
     <div
       className={cn(
-        "flex items-stretch divide-x divide-border",
-        "rounded-[var(--radius-xl)] border border-border bg-surface",
-        "shadow-[0_2px_16px_oklch(0%_0_0/0.06),0_1px_3px_oklch(0%_0_0/0.04)]",
+        "flex items-stretch divide-x divide-border/85",
+        "rounded-[var(--radius-xl)] border border-border/90 bg-surface",
+        "shadow-panel",
         className,
       )}
     >
@@ -28,7 +30,14 @@ export function SummaryStrip({ items, className }: SummaryStripProps) {
           <span className="text-[11px] font-[580] uppercase tracking-[0.07em] text-text-muted">
             {item.label}
           </span>
-          <span className="text-2xl font-[660] tracking-[-0.03em] text-text tabular-nums">
+          <span
+            className={cn(
+              "text-2xl font-[660] tracking-[-0.03em] tabular-nums",
+              item.valueEmphasis === "accent"
+                ? "text-accent-foreground"
+                : "text-text",
+            )}
+          >
             {item.value}
           </span>
           {item.subValue && (

@@ -39,7 +39,7 @@ export function CustomersPage() {
     : null;
 
   return (
-    <div className="min-h-dvh bg-neutral-50/80">
+    <div className="min-h-dvh bg-bg">
       <Header />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">

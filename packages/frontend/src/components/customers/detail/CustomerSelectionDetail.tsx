@@ -40,6 +40,7 @@ export function CustomerSelectionDetail({
           {
             label: "Total",
             value: totalDisplay,
+            valueEmphasis: "accent",
           },
         ]}
       />

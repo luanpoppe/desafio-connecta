@@ -61,10 +61,14 @@ export function TransactionsTable({
         {carts.map((c) => (
           <TableRow key={c.id}>
             <TableTd>{c.id}</TableTd>
-            <TableTd align="right">{money.format(c.total)}</TableTd>
+            <TableTd align="right" className="text-accent-foreground font-[500]">
+              {money.format(c.total)}
+            </TableTd>
             <TableTd align="right">{c.totalProducts}</TableTd>
             <TableTd align="right">{c.totalQuantity}</TableTd>
-            <TableTd align="right">{money.format(c.discountedTotal)}</TableTd>
+            <TableTd align="right" className="text-accent-foreground font-[500]">
+              {money.format(c.discountedTotal)}
+            </TableTd>
           </TableRow>
         ))}
       </TableBody>

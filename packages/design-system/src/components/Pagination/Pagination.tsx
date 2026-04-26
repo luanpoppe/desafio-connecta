@@ -56,7 +56,7 @@ function NavButton({
       className={cn(
         "size-7 flex cursor-pointer items-center justify-center rounded-[var(--radius-sm)]",
         "text-text-secondary transition-colors duration-150 outline-none",
-        "hover:bg-neutral-100 hover:text-text",
+        "hover:bg-surface-subtle hover:text-text",
         "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1",
         "disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:bg-transparent",
       )}

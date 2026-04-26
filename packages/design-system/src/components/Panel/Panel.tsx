@@ -8,8 +8,8 @@ export function Panel({ children, className, ...props }: PanelProps) {
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-xl)] border border-border bg-surface",
-        "shadow-[0_2px_16px_oklch(0%_0_0/0.06),0_1px_3px_oklch(0%_0_0/0.04)]",
+        "rounded-[var(--radius-xl)] border border-border/90 bg-surface",
+        "shadow-panel",
         className,
       )}
       {...props}
@@ -53,8 +53,8 @@ export function PanelFooter({ children, className, ...props }: React.HTMLAttribu
   return (
     <div
       className={cn(
-        "px-6 py-3.5 border-t border-border",
-        "bg-neutral-50 rounded-b-[var(--radius-xl)]",
+        "px-6 py-3.5 border-t border-border/80",
+        "bg-surface-subtle rounded-b-[var(--radius-xl)]",
         className,
       )}
       {...props}

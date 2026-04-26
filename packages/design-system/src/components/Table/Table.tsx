@@ -13,7 +13,10 @@ export function Table({ children, className, ...props }: React.HTMLAttributes<HT
 
 export function TableHead({ children, className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={cn("border-b border-border bg-neutral-50/70", className)} {...props}>
+    <thead
+      className={cn("border-b border-border/80 bg-surface-inset/85", className)}
+      {...props}
+    >
       {children}
     </thead>
   );
@@ -36,8 +39,8 @@ export function TableRow({ children, className, selected, interactive, ...props 
     <tr
       className={cn(
         "transition-colors duration-100",
-        interactive && "cursor-pointer hover:bg-neutral-50/80",
-        selected && "bg-accent-subtle hover:bg-accent-subtle",
+        interactive && "cursor-pointer hover:bg-surface-subtle/90",
+        selected && "bg-accent-subtle/95 hover:bg-accent-subtle/95",
         className,
       )}
       {...props}
