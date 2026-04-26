@@ -33,6 +33,10 @@ export function CustomerDetailSection({
   }
 
   return (
-    <CustomerSelectionDetail selectedUser={selectedUser} cartsQuery={cartsQuery} />
+    <CustomerSelectionDetail
+      key={selectedUserId}
+      selectedUser={selectedUser}
+      cartsQuery={cartsQuery}
+    />
   );
 }

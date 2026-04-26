@@ -1,5 +1,19 @@
+import type { CartProductDto } from "./product.types";
+
+export type { CartProductDto } from "./product.types";
+
 export interface CartDto {
   id: number;
+  total: number;
+  discountedTotal: number;
+  userId: number;
+  totalProducts: number;
+  totalQuantity: number;
+}
+
+export interface LiveCartDto {
+  id: number;
+  products: CartProductDto[];
   total: number;
   discountedTotal: number;
   userId: number;

@@ -1,3 +1,4 @@
+import { type KeyboardEvent } from "react";
 import {
   Spinner,
   Table,
@@ -8,7 +9,7 @@ import {
   TableTh,
 } from "@connecta/design-system";
 import type { CartsByUserWithSummaryResponse } from "../../../api/@types/cart.types";
-import { money } from "../customers.constants";
+import { CUSTOMER_TRANSACTION_TABLE_COLUMNS } from "./customerTransactionTableColumns";
 
 export function TransactionsLoading() {
   return (
@@ -29,15 +30,19 @@ export function TransactionsError() {
 
 export function TransactionsTable({
   carts,
+  onSelectTransaction,
 }: {
   carts: CartsByUserWithSummaryResponse["carts"];
+  onSelectTransaction: (cartId: number) => void;
 }) {
+  const colCount = CUSTOMER_TRANSACTION_TABLE_COLUMNS.length;
+
   if (carts.length === 0) {
     return (
       <Table>
         <TableBody>
           <TableRow>
-            <TableTd colSpan={5} muted className="text-center py-10">
+            <TableTd colSpan={colCount} muted className="text-center py-10">
               Sem transações para este cliente.
             </TableTd>
           </TableRow>
@@ -50,25 +55,41 @@ export function TransactionsTable({
     <Table>
       <TableHead>
         <TableRow>
-          <TableTh>ID</TableTh>
-          <TableTh align="right">Total</TableTh>
-          <TableTh align="right">Produtos</TableTh>
-          <TableTh align="right">Qtd.</TableTh>
-          <TableTh align="right">Total c/ desc.</TableTh>
+          {CUSTOMER_TRANSACTION_TABLE_COLUMNS.map((col) => (
+            <TableTh
+              key={col.id}
+              align={col.align === "right" ? "right" : "left"}
+            >
+              {col.header}
+            </TableTh>
+          ))}
         </TableRow>
       </TableHead>
       <TableBody>
         {carts.map((c) => (
-          <TableRow key={c.id}>
-            <TableTd>{c.id}</TableTd>
-            <TableTd align="right" className="text-accent-foreground font-[500]">
-              {money.format(c.total)}
-            </TableTd>
-            <TableTd align="right">{c.totalProducts}</TableTd>
-            <TableTd align="right">{c.totalQuantity}</TableTd>
-            <TableTd align="right" className="text-accent-foreground font-[500]">
-              {money.format(c.discountedTotal)}
-            </TableTd>
+          <TableRow
+            key={c.id}
+            interactive
+            onClick={() => onSelectTransaction(c.id)}
+            onKeyDown={(e: KeyboardEvent<HTMLTableRowElement>) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelectTransaction(c.id);
+              }
+            }}
+            tabIndex={0}
+            aria-label={`Ver produtos desta transação, identificador ${c.id}.`}
+          >
+            {CUSTOMER_TRANSACTION_TABLE_COLUMNS.map((col) => (
+              <TableTd
+                key={col.id}
+                align={col.align === "right" ? "right" : "left"}
+                muted={col.muted}
+                className={col.className}
+              >
+                {col.cell(c)}
+              </TableTd>
+            ))}
           </TableRow>
         ))}
       </TableBody>
