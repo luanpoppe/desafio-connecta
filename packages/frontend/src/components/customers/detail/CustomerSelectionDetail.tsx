@@ -1,8 +1,10 @@
+import { useState } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Panel, PanelBody, PanelHeader, SummaryStrip } from "@connecta/design-system";
 import type { CartsByUserWithSummaryResponse } from "../../../api/@types/cart.types";
 import type { UserDto } from "../../../api/@types/user.types";
 import { money } from "../customers.constants";
+import { CartProductsModal } from "../cart-products";
 import {
   TransactionsError,
   TransactionsLoading,
@@ -18,6 +20,8 @@ export function CustomerSelectionDetail({
   selectedUser,
   cartsQuery,
 }: CustomerSelectionDetailProps) {
+  const [detailCartId, setDetailCartId] = useState<number | null>(null);
+
   const customerName =
     selectedUser != null
       ? `${selectedUser.firstName} ${selectedUser.lastName}`.trim()
@@ -30,6 +34,13 @@ export function CustomerSelectionDetail({
 
   return (
     <div className="flex flex-col gap-4 min-w-0">
+      <CartProductsModal
+        open={detailCartId != null}
+        cartId={detailCartId}
+        onOpenChange={(next) => {
+          if (!next) setDetailCartId(null);
+        }}
+      />
       <SummaryStrip
         items={[
           {
@@ -48,7 +59,7 @@ export function CustomerSelectionDetail({
       <Panel className="min-w-0 flex-1">
         <PanelHeader
           title="Transações"
-          description="Carrinhos associados ao cliente"
+          description="Carrinhos do cliente. Clique numa linha para ver os produtos no detalhe."
         />
         <PanelBody className="p-0">
           {cartsQuery.isPending ? (
@@ -56,7 +67,10 @@ export function CustomerSelectionDetail({
           ) : cartsQuery.isError ? (
             <TransactionsError />
           ) : (
-            <TransactionsTable carts={cartsQuery.data?.carts ?? []} />
+            <TransactionsTable
+              carts={cartsQuery.data?.carts ?? []}
+              onSelectTransaction={setDetailCartId}
+            />
           )}
         </PanelBody>
       </Panel>
