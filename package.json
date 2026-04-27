@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter \"./packages/backend\" --filter \"./packages/frontend\" --parallel run dev",
-    "lint": "pnpm --filter \"./packages/frontend\" run lint && pnpm --filter \"./packages/backend\" run lint:ci",
+    "lint": "pnpm --filter \"./packages/frontend\" run lint && pnpm --filter \"./packages/backend\" run prisma:generate && pnpm --filter \"./packages/backend\" run lint:ci",
     "test": "pnpm --filter \"./packages/design-system\" run test && pnpm --filter \"./packages/frontend\" run test && pnpm --filter \"./packages/backend\" run test",
     "build": "pnpm --filter \"./packages/frontend...\" run build",
     "build:backend": "pnpm --filter \"./packages/backend\" run prisma:generate && pnpm --filter \"./packages/backend\" run build",
