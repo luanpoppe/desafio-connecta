@@ -32,7 +32,7 @@ No frontend, a prioridade foi o gerenciamento eficiente do estado para garantir 
   - **TanStack Query:** Gerencia o *Server State* (cache, revalidação, estados de loading e erro). Isso elimina a necessidade de `useEffect` manuais para busca de dados.
   - **Zustand:** Utilizado para *UI State* global (como a seleção do cliente atual), por ser mais leve e ter menos boilerplate que o Redux.
 - **Design System Interno:** Os componentes foram construídos sobre um pacote compartilhado em `@connecta/design-system`, promovendo a consistência visual e reuso de código através do monorepo.
-- **Listagens responsivas:** tabelas densas (clientes, transações, produtos do carrinho) usam o `ResponsiveDataTable` do mesmo pacote — em ecrãs estreitos passam a cartões ou linhas empilhadas em vez de depender de scroll horizontal.
+- **Listagens responsivas:** tabelas densas (clientes, transações, produtos do carrinho) usam o `ResponsiveDataTable` do mesmo pacote — em telas estreitas passam a cartões ou linhas empilhadas em vez de depender de scroll horizontal.
 - **Tailwind CSS 4:** Utilizado para estilização baseada em utilitários, garantindo um bundle final otimizado e facilidade em lidar com design responsivo.
 
 ---
