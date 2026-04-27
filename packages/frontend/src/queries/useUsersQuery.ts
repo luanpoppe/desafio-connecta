@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchUsersPage } from "../api/users";
 
 export function useUsersQuery(page: number, pageSize: number) {
@@ -7,5 +7,6 @@ export function useUsersQuery(page: number, pageSize: number) {
     queryFn: () => fetchUsersPage(page, pageSize),
     staleTime: 60_000,
     retry: 1,
+    placeholderData: keepPreviousData,
   });
 }
