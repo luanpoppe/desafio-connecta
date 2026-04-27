@@ -10,5 +10,12 @@
     "allowImportingTsExtensions": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["playground", "node_modules", "dist"]
+  "exclude": [
+    "playground",
+    "node_modules",
+    "dist",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/test"
+  ]
 }

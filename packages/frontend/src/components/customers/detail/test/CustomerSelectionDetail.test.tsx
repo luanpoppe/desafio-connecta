@@ -158,7 +158,7 @@ describe("CustomerSelectionDetail", () => {
 
     const txRow = screen.getByRole("row", { name: /identificador 100/i });
     await user.click(txRow);
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText(/Transação #100/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Fechar" }));

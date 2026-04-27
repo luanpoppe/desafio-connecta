@@ -4,6 +4,7 @@ import {
   PanelFooter,
   PanelHeader,
   Pagination,
+  SkeletonRow,
   SkeletonTable,
 } from "@connecta/design-system";
 import type { UserDto } from "../../../api/@types/user.types";
@@ -37,9 +38,18 @@ export function CustomersListPanel({
       />
       <PanelBody className="p-0">
         {isPending ? (
-          <div className="px-6 py-4">
-            <SkeletonTable rows={5} cols={4} />
-          </div>
+          <>
+            <div className="md:hidden divide-y divide-border">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="px-4 py-4">
+                  <SkeletonRow lines={4} />
+                </div>
+              ))}
+            </div>
+            <div className="hidden md:block px-6 py-4">
+              <SkeletonTable rows={5} cols={4} />
+            </div>
+          </>
         ) : isError ? (
           <div className="px-6 py-8 text-sm text-text-muted">
             Não foi possível carregar os clientes. Confirme o backend e
