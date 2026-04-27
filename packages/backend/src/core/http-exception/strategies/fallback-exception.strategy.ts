@@ -6,7 +6,7 @@ import type {
 } from '../exception-handler.strategy';
 
 export class FallbackExceptionStrategy implements HttpExceptionHandlerStrategy {
-  canHandle(): boolean {
+  canHandle(_exception: unknown): boolean {
     return true;
   }
 

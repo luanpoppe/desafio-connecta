@@ -1,11 +1,18 @@
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: 'src',
-  testRegex: '.*\\.spec\\.ts$',
+  testMatch: ['**/test/**/*.spec.ts'],
   transform: {
     '^.+\\.(t|j)s$': ['@swc/jest'],
   },
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: [
+    '**/*.(t|j)s',
+    '!**/*.module.ts',
+    '!**/swagger/**',
+    '!**/generated/**',
+    '!**/dtos/**',
+    '!**/*controller.ts',
+  ],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
   moduleNameMapper: {

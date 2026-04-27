@@ -1,7 +1,6 @@
 import axios from "axios";
 
-function getBaseUrl(): string {
-  const raw = import.meta.env.VITE_API_BASE_URL;
+export function normalizeApiBaseUrl(raw: unknown): string {
   if (typeof raw !== "string" || !raw.trim()) {
     throw new Error(
       "Defina VITE_API_BASE_URL no ficheiro .env (veja .env.example).",
@@ -11,6 +10,6 @@ function getBaseUrl(): string {
 }
 
 export const api = axios.create({
-  baseURL: getBaseUrl(),
+  baseURL: normalizeApiBaseUrl(process.env.VITE_API_BASE_URL),
   headers: { Accept: "application/json" },
 });
