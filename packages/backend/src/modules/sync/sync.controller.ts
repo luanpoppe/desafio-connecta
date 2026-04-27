@@ -8,6 +8,6 @@ export class SyncController {
   @Post('sync-data')
   @HttpCode(204)
   async syncData() {
-    await this.syncUseCase.syncData();
+    await this.syncUseCase.syncData({ force: true });
   }
 }
