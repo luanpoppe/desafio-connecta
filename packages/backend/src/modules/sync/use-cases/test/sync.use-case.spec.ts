@@ -1,6 +1,6 @@
 import type { PrismaService } from '@/lib/database/prisma.service';
 import type { ExternalApiService } from '@/lib/external-api';
-import type { RedisService } from '@/lib/cache/redis.service';
+import type { Cache } from '@/lib/cache/cache.interface';
 import { Logger } from '@nestjs/common';
 import { makeExternalUserDto } from '../../mappers/test/external-user.fixture';
 import { SyncUseCase } from '../sync.use-case';
@@ -23,7 +23,7 @@ describe('SyncUseCase', () => {
     get: redisGet,
     set: redisSet,
     del: redisDel,
-  } as unknown as RedisService;
+  } as unknown as Cache;
 
   beforeEach(() => {
     jest.clearAllMocks();

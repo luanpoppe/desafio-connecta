@@ -1,4 +1,4 @@
-import { RedisService } from '@/lib/cache/redis.service';
+import { CACHE, type Cache } from '@/lib/cache/cache.interface';
 import type { CartDto, GetCartsResponseDto } from '@/lib/external-api';
 import { Test } from '@nestjs/testing';
 import { ExternalCartsCacheKeys } from '../../cache/external-carts-cache.keys';
@@ -36,7 +36,7 @@ function minimalGetCartsResponse(
 describe('CachingExternalCartsGateway', () => {
   let gateway: CachingExternalCartsGateway;
   let inner: jest.Mocked<Pick<HttpExternalCartsGateway, 'getCartsByUser' | 'getCartById'>>;
-  let redis: jest.Mocked<Pick<RedisService, 'get' | 'set' | 'del'>>;
+  let redis: jest.Mocked<Pick<Cache, 'get' | 'set' | 'del'>>;
 
   beforeEach(async () => {
     inner = {
@@ -52,7 +52,7 @@ describe('CachingExternalCartsGateway', () => {
       providers: [
         CachingExternalCartsGateway,
         { provide: HttpExternalCartsGateway, useValue: inner },
-        { provide: RedisService, useValue: redis },
+        { provide: CACHE, useValue: redis },
       ],
     }).compile();
     gateway = moduleRef.get(CachingExternalCartsGateway);

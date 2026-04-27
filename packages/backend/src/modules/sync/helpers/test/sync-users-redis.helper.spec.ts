@@ -1,4 +1,4 @@
-import type { RedisService } from '@/lib/cache/redis.service';
+import type { Cache } from '@/lib/cache/cache.interface';
 import { Logger } from '@nestjs/common';
 import { makeExternalUserDto } from '../../mappers/test/external-user.fixture';
 import { SyncUsersRedisHelper } from '../sync-users-redis.helper';
@@ -11,7 +11,7 @@ describe('SyncUsersRedisHelper', () => {
     get: redisGet,
     set: redisSet,
     del: redisDel,
-  } as unknown as RedisService;
+  } as unknown as Cache;
 
   let logSpy: jest.SpyInstance;
   let warnSpy: jest.SpyInstance;

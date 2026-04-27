@@ -1,7 +1,7 @@
-import { RedisService } from '@/lib/cache/redis.service';
+import { CACHE, type Cache } from '@/lib/cache/cache.interface';
 import { PrismaService } from '@/lib/database/prisma.service';
 import { ExternalApiService } from '@/lib/external-api';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { SyncDataHelper } from '../helpers/sync-data.helper';
 import { SyncUsersRedisHelper } from '../helpers/sync-users-redis.helper';
 
@@ -16,7 +16,7 @@ export class SyncUseCase implements OnModuleInit {
   constructor(
     private readonly externalApiService: ExternalApiService,
     private readonly prismaService: PrismaService,
-    private readonly redisService: RedisService,
+    @Inject(CACHE) private readonly cache: Cache,
   ) {}
 
   onModuleInit(): void {
@@ -35,7 +35,7 @@ export class SyncUseCase implements OnModuleInit {
 
     if (!force) {
       const skip = await SyncUsersRedisHelper.trySkipStartupSyncUsingCache(
-        this.redisService,
+        this.cache,
         this.logger,
       );
 
@@ -52,7 +52,7 @@ export class SyncUseCase implements OnModuleInit {
     );
 
     await SyncUsersRedisHelper.writeUsersCache(
-      this.redisService,
+      this.cache,
       this.logger,
       usersResponse.users,
     );

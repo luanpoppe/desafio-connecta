@@ -1,4 +1,4 @@
-import { RedisService } from '@/lib/cache/redis.service';
+import type { Cache } from '@/lib/cache/cache.interface';
 import {
   externalUserSchema,
   type ExternalUserDto,
@@ -13,7 +13,7 @@ export class SyncUsersRedisHelper {
   static readonly TTL_SECONDS = 3600;
 
   static async trySkipStartupSyncUsingCache(
-    redis: RedisService,
+    redis: Cache,
     logger: Logger,
   ): Promise<boolean> {
     try {
@@ -48,7 +48,7 @@ export class SyncUsersRedisHelper {
   }
 
   static async writeUsersCache(
-    redis: RedisService,
+    redis: Cache,
     logger: Logger,
     users: ExternalUserDto[],
   ): Promise<void> {

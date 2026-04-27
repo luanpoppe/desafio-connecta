@@ -1,10 +1,10 @@
-import { RedisService } from '@/lib/cache/redis.service';
+import { CACHE, type Cache } from '@/lib/cache/cache.interface';
 import type { CartDto, GetCartsResponseDto } from '@/lib/external-api';
 import {
   cartSchema,
   getCartsResponseSchema,
 } from '@/lib/external-api/dtos/carts.dto';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ExternalCartsGateway } from '../../application/gateways/external-carts.gateway';
 import { ExternalCartsCacheKeys } from '../cache/external-carts-cache.keys';
 import { HttpExternalCartsGateway } from './http-external-carts.gateway';
@@ -17,12 +17,12 @@ export class CachingExternalCartsGateway implements ExternalCartsGateway {
 
   constructor(
     private readonly inner: HttpExternalCartsGateway,
-    private readonly redis: RedisService,
+    @Inject(CACHE) private readonly cache: Cache,
   ) {}
 
   async getCartsByUser(externalUserId: number): Promise<GetCartsResponseDto> {
     const key = ExternalCartsCacheKeys.userCarts(externalUserId);
-    const cached = await this.redis.get(key);
+    const cached = await this.cache.get(key);
 
     if (cached !== null) {
       try {
@@ -33,12 +33,12 @@ export class CachingExternalCartsGateway implements ExternalCartsGateway {
         return parsed;
       } catch {
         this.logger.warn(`Cache inválido para ${key}; a repor da origem.`);
-        await this.redis.del(key);
+        await this.cache.del(key);
       }
     }
 
     const fresh = await this.inner.getCartsByUser(externalUserId);
-    await this.redis.set(key, JSON.stringify(fresh), CACHE_TTL_SECONDS);
+    await this.cache.set(key, JSON.stringify(fresh), CACHE_TTL_SECONDS);
     this.logger.log(
       `Cache miss: carrinhos por utilizador externo ${externalUserId} obtidos na origem e gravados (key=${key}, ${fresh.carts.length} carrinhos, TTL=${CACHE_TTL_SECONDS}s).`,
     );
@@ -47,7 +47,7 @@ export class CachingExternalCartsGateway implements ExternalCartsGateway {
 
   async getCartById(cartId: number): Promise<CartDto> {
     const key = ExternalCartsCacheKeys.cartById(cartId);
-    const cached = await this.redis.get(key);
+    const cached = await this.cache.get(key);
 
     if (cached !== null) {
       try {
@@ -58,12 +58,12 @@ export class CachingExternalCartsGateway implements ExternalCartsGateway {
         return parsed;
       } catch {
         this.logger.warn(`Cache inválido para ${key}; a repor da origem.`);
-        await this.redis.del(key);
+        await this.cache.del(key);
       }
     }
 
     const fresh = await this.inner.getCartById(cartId);
-    await this.redis.set(key, JSON.stringify(fresh), CACHE_TTL_SECONDS);
+    await this.cache.set(key, JSON.stringify(fresh), CACHE_TTL_SECONDS);
     this.logger.log(
       `Cache miss: carrinho ${cartId} obtido na origem e gravado (key=${key}, total=${fresh.total}, TTL=${CACHE_TTL_SECONDS}s).`,
     );
