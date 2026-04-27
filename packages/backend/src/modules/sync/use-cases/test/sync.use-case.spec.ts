@@ -49,7 +49,7 @@ describe('SyncUseCase', () => {
         expect.objectContaining({
           where: { externalId: 10 },
           create: expect.objectContaining({ externalId: 10 }),
-          update: expect.any(Object),
+          update: expect.objectContaining({ firstName: 'A' }),
         }),
       );
     });

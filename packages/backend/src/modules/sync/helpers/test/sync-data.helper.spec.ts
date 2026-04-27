@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { PrismaService } from '@/lib/database/prisma.service';
 import { SyncDataHelper } from '../sync-data.helper';
 import { makeExternalUserDto } from '../../mappers/test/external-user.fixture';

@@ -7,6 +7,7 @@ import type {
 
 export class FallbackExceptionStrategy implements HttpExceptionHandlerStrategy {
   canHandle(_exception: unknown): boolean {
+    void _exception;
     return true;
   }
 

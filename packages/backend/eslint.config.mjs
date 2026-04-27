@@ -41,6 +41,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ['**/*.spec.ts', '**/test/**/*.ts', 'test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
+  {
     files: ['src/generated/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',

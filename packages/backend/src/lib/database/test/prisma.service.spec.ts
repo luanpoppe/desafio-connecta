@@ -7,7 +7,7 @@ const mockDisconnect = jest.fn().mockResolvedValue(undefined);
 jest.mock('@/generated/prisma/client', () => ({
   PrismaClient: class MockPrismaClient {
     $disconnect = mockDisconnect;
-    constructor(_opts?: unknown) {}
+    constructor() {}
   },
 }));
 
