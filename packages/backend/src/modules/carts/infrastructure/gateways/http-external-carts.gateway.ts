@@ -1,10 +1,10 @@
-import { ExternalApiService } from '@/lib/external-api';
-import { Injectable } from '@nestjs/common';
+import { EXTERNAL_API, type ExternalApi } from '@/lib/external-api';
+import { Inject, Injectable } from '@nestjs/common';
 import type { ExternalCartsGateway } from '../../application/gateways/external-carts.gateway';
 
 @Injectable()
 export class HttpExternalCartsGateway implements ExternalCartsGateway {
-  constructor(private readonly externalApi: ExternalApiService) {}
+  constructor(@Inject(EXTERNAL_API) private readonly externalApi: ExternalApi) {}
 
   getCartsByUser(externalUserId: number) {
     return this.externalApi.getCartsByUser(externalUserId);

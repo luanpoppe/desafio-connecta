@@ -4,17 +4,18 @@ import { CoreModule } from '@/core/core.module';
 import { CACHE } from './cache/cache.interface';
 import { RedisService } from './cache/redis.service';
 import { PrismaService } from './database/prisma.service';
-import { ExternalApiService } from './external-api';
+import { ExternalApiService, EXTERNAL_API } from './external-api';
 
 @Global()
 @Module({
   imports: [HttpModule, CoreModule],
   providers: [
     ExternalApiService,
+    { provide: EXTERNAL_API, useExisting: ExternalApiService },
     PrismaService,
     RedisService,
     { provide: CACHE, useExisting: RedisService },
   ],
-  exports: [ExternalApiService, PrismaService, CACHE],
+  exports: [EXTERNAL_API, PrismaService, CACHE],
 })
 export class LibModule {}

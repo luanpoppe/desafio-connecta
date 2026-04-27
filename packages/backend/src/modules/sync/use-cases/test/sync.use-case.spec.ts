@@ -1,5 +1,5 @@
 import type { PrismaService } from '@/lib/database/prisma.service';
-import type { ExternalApiService } from '@/lib/external-api';
+import type { ExternalApi } from '@/lib/external-api';
 import type { Cache } from '@/lib/cache/cache.interface';
 import { Logger } from '@nestjs/common';
 import { makeExternalUserDto } from '../../mappers/test/external-user.fixture';
@@ -10,7 +10,7 @@ describe('SyncUseCase', () => {
   const upsert = jest.fn().mockResolvedValue(undefined);
   const externalApiService = {
     getUsers,
-  } as unknown as ExternalApiService;
+  } as unknown as ExternalApi;
 
   const prismaService = {
     user: { upsert },

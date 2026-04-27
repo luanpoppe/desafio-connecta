@@ -1,6 +1,6 @@
 import { CACHE, type Cache } from '@/lib/cache/cache.interface';
 import { PrismaService } from '@/lib/database/prisma.service';
-import { ExternalApiService } from '@/lib/external-api';
+import { EXTERNAL_API, type ExternalApi } from '@/lib/external-api';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { SyncDataHelper } from '../helpers/sync-data.helper';
 import { SyncUsersRedisHelper } from '../helpers/sync-users-redis.helper';
@@ -14,7 +14,7 @@ export class SyncUseCase implements OnModuleInit {
   private readonly logger = new Logger(SyncUseCase.name);
 
   constructor(
-    private readonly externalApiService: ExternalApiService,
+    @Inject(EXTERNAL_API) private readonly externalApi: ExternalApi,
     private readonly prismaService: PrismaService,
     @Inject(CACHE) private readonly cache: Cache,
   ) {}
@@ -44,7 +44,7 @@ export class SyncUseCase implements OnModuleInit {
       }
     }
 
-    const usersResponse = await this.externalApiService.getUsers();
+    const usersResponse = await this.externalApi.getUsers();
 
     await SyncDataHelper.persistExternalUsers(
       this.prismaService,

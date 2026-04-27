@@ -15,9 +15,10 @@ import type {
   GetUsersResponseDto,
 } from './dtos';
 import { cartSchema, getCartsResponseSchema } from './dtos/carts.dto';
+import type { ExternalApi } from './external-api.interface';
 
 @Injectable()
-export class ExternalApiService {
+export class ExternalApiService implements ExternalApi {
   private readonly logger = new Logger(ExternalApiService.name);
   private readonly baseUrl: string;
 
