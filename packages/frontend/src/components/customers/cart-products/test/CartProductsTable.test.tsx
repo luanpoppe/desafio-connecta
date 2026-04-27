@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import type { CartProductDto } from "../../../../api/@types/product.types";
 import { CartProductsTable } from "../CartProductsTable";
 
@@ -16,9 +16,10 @@ const product: CartProductDto = {
 describe("CartProductsTable", () => {
   it("renders column headers and product cells", () => {
     render(<CartProductsTable products={[product]} />);
-    expect(screen.getByText("Produto")).toBeInTheDocument();
-    expect(screen.getByText("Widget")).toBeInTheDocument();
-    expect(screen.getByText("10%")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
+    const table = screen.getByRole("table");
+    expect(within(table).getByText("Produto")).toBeInTheDocument();
+    expect(within(table).getByText("Widget")).toBeInTheDocument();
+    expect(within(table).getByText("10%")).toBeInTheDocument();
+    expect(within(table).getByText("2")).toBeInTheDocument();
   });
 });

@@ -31,6 +31,16 @@ export {
 } from "./components/Table/Table";
 
 export {
+  ResponsiveDataTable,
+} from "./components/ResponsiveDataTable/ResponsiveDataTable";
+export type {
+  ResponsiveDataColumn,
+  ResponsiveDataColumnAlign,
+  ResponsiveDataRowInteraction,
+  ResponsiveDataTableProps,
+} from "./components/ResponsiveDataTable/ResponsiveDataTable";
+
+export {
   Panel,
   PanelHeader,
   PanelBody,

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useCartByIdQuery } from "../../../../queries/useCartByIdQuery";
 import { CartProductsModal } from "../CartProductsModal";
@@ -84,7 +84,9 @@ describe("CartProductsModal", () => {
       isRefetching: false,
     } as unknown as ReturnType<typeof useCartByIdQuery>);
     render(<CartProductsModal open cartId={9} onOpenChange={onOpenChange} />);
-    expect(screen.getByText("Item")).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByRole("table")).toBeInTheDocument();
+    expect(within(within(dialog).getByRole("table")).getByText("Item")).toBeInTheDocument();
   });
 
   it("passes enabled false when modal is closed", () => {

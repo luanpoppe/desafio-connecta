@@ -1,14 +1,49 @@
 import { type KeyboardEvent } from "react";
 import {
   Avatar,
-  Table,
-  TableBody,
-  TableHead,
+  ResponsiveDataTable,
+  type ResponsiveDataColumn,
   TableRow,
   TableTd,
-  TableTh,
 } from "@connecta/design-system";
 import type { UserDto } from "../../../api/@types/user.types";
+
+const CUSTOMER_LIST_COLUMNS: ResponsiveDataColumn<UserDto>[] = [
+  {
+    id: "name",
+    header: "Cliente",
+    cell: (user) => {
+      const name = `${user.firstName} ${user.lastName}`.trim();
+      return (
+        <span className="flex items-center gap-3 min-w-0">
+          <Avatar src={user.image} name={name} size="sm" />
+          <span className="truncate font-medium">{name}</span>
+        </span>
+      );
+    },
+    className: "whitespace-normal min-w-0 max-w-[200px]",
+  },
+  {
+    id: "email",
+    header: "E-mail",
+    cell: (user) => user.email,
+    muted: true,
+    className: "max-w-[180px] truncate",
+  },
+  {
+    id: "phone",
+    header: "Telefone",
+    cell: (user) => user.phone,
+    muted: true,
+  },
+  {
+    id: "id",
+    header: "ID",
+    cell: (user) => user.id,
+    align: "right",
+    muted: true,
+  },
+];
 
 export function CustomerListRow({
   user,
@@ -61,25 +96,16 @@ export function CustomersListTable({
   onSelectUser: (id: number) => void;
 }) {
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableTh>Cliente</TableTh>
-          <TableTh>E-mail</TableTh>
-          <TableTh>Telefone</TableTh>
-          <TableTh align="right">ID</TableTh>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {items.map((u) => (
-          <CustomerListRow
-            key={u.id}
-            user={u}
-            selected={selectedUserId === u.id}
-            onSelect={onSelectUser}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <ResponsiveDataTable
+      rows={items}
+      columns={CUSTOMER_LIST_COLUMNS}
+      getRowKey={(u) => u.id}
+      rowInteraction={{
+        type: "select",
+        selectedKey: selectedUserId,
+        onSelect: (u) => onSelectUser(u.id),
+        listboxAriaLabel: "Clientes",
+      }}
+    />
   );
 }

@@ -1,12 +1,7 @@
-import { type KeyboardEvent } from "react";
 import {
+  ResponsiveDataTable,
   Spinner,
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableTd,
-  TableTh,
+  type ResponsiveDataColumn,
 } from "@connecta/design-system";
 import type { CartsByUserWithSummaryResponse } from "../../../api/@types/cart.types";
 import { CUSTOMER_TRANSACTION_TABLE_COLUMNS } from "./customerTransactionTableColumns";
@@ -28,6 +23,17 @@ export function TransactionsError() {
   );
 }
 
+const TRANSACTION_COLUMNS: ResponsiveDataColumn<
+  CartsByUserWithSummaryResponse["carts"][number]
+>[] = CUSTOMER_TRANSACTION_TABLE_COLUMNS.map((c) => ({
+  id: c.id,
+  header: c.header,
+  cell: c.cell,
+  align: c.align === "right" ? "right" : "left",
+  muted: c.muted,
+  className: c.className,
+}));
+
 export function TransactionsTable({
   carts,
   onSelectTransaction,
@@ -35,64 +41,26 @@ export function TransactionsTable({
   carts: CartsByUserWithSummaryResponse["carts"];
   onSelectTransaction: (cartId: number) => void;
 }) {
-  const colCount = CUSTOMER_TRANSACTION_TABLE_COLUMNS.length;
-
   if (carts.length === 0) {
     return (
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableTd colSpan={colCount} muted className="text-center py-10">
-              Sem transações para este cliente.
-            </TableTd>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <p className="px-6 py-10 text-center text-sm text-text-muted border-b border-border">
+        Sem transações para este cliente.
+      </p>
     );
   }
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          {CUSTOMER_TRANSACTION_TABLE_COLUMNS.map((col) => (
-            <TableTh
-              key={col.id}
-              align={col.align === "right" ? "right" : "left"}
-            >
-              {col.header}
-            </TableTh>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {carts.map((c) => (
-          <TableRow
-            key={c.id}
-            interactive
-            onClick={() => onSelectTransaction(c.id)}
-            onKeyDown={(e: KeyboardEvent<HTMLTableRowElement>) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onSelectTransaction(c.id);
-              }
-            }}
-            tabIndex={0}
-            aria-label={`Ver produtos desta transação, identificador ${c.id}.`}
-          >
-            {CUSTOMER_TRANSACTION_TABLE_COLUMNS.map((col) => (
-              <TableTd
-                key={col.id}
-                align={col.align === "right" ? "right" : "left"}
-                muted={col.muted}
-                className={col.className}
-              >
-                {col.cell(c)}
-              </TableTd>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <ResponsiveDataTable
+      rows={carts}
+      columns={TRANSACTION_COLUMNS}
+      getRowKey={(c) => c.id}
+      mobileStackOnly
+      rowInteraction={{
+        type: "action",
+        onActivate: (c) => onSelectTransaction(c.id),
+        getRowAriaLabel: (c) =>
+          `Ver produtos desta transação, identificador ${c.id}.`,
+      }}
+    />
   );
 }
