@@ -1,5 +1,7 @@
-import { USER_REPOSITORY } from '@/modules/users/domain/repositories/user.repository.token';
-import type { UserRepository } from '@/modules/users/domain/repositories/user.repository';
+import {
+  USER_REPOSITORY,
+  type UserRepository,
+} from '@/modules/users/domain/repositories/user.repository';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   EXTERNAL_CARTS_GATEWAY,

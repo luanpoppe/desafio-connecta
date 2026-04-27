@@ -1,4 +1,4 @@
-import { USER_REPOSITORY } from '@/modules/users/domain/repositories/user.repository.token';
+import { USER_REPOSITORY } from '@/modules/users/domain/repositories/user.repository';
 import type { UserRepository } from '@/modules/users/domain/repositories/user.repository';
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';

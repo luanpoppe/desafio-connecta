@@ -1,4 +1,4 @@
-import { USER_REPOSITORY } from '../../domain/repositories/user.repository.token';
+import { USER_REPOSITORY } from '../../domain/repositories/user.repository';
 import type { UserRepository } from '../../domain/repositories/user.repository';
 import { Test } from '@nestjs/testing';
 import { ListUsersPaginatedUseCase } from '../use-cases/list-users-paginated.use-case';

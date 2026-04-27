@@ -1,3 +1,4 @@
+import type { InjectionToken } from '@nestjs/common';
 import type { ListUsersParams } from './list-users.params';
 import type { PaginatedUsers } from './paginated-users';
 
@@ -11,3 +12,5 @@ export interface UserRepository {
   /** `externalId` da API externa (DummyJSON) para o utilizador com `id` interno dado, ou `null`. */
   findExternalIdByInternalUserId(internalUserId: number): Promise<number | null>;
 }
+
+export const USER_REPOSITORY: InjectionToken = Symbol('USER_REPOSITORY');
