@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { Panel, PanelBody, PanelHeader, SummaryStrip } from "@connecta/design-system";
+import { Panel, PanelBody, PanelHeader, Spinner, SummaryStrip } from "@connecta/design-system";
 import type { CartsByUserWithSummaryResponse } from "../../../api/@types/cart.types";
 import type { UserDto } from "../../../api/@types/user.types";
 import { money } from "../customers.constants";
-import { CartProductsModal } from "../cart-products";
 import {
   TransactionsError,
   TransactionsLoading,
   TransactionsTable,
 } from "./CustomerTransactionsViews";
+
+const CartProductsModal = lazy(() =>
+  import("../cart-products/CartProductsModal").then((m) => ({ default: m.CartProductsModal })),
+);
 
 interface CustomerSelectionDetailProps {
   selectedUser: UserDto | undefined;
@@ -34,13 +37,24 @@ export function CustomerSelectionDetail({
 
   return (
     <div className="flex flex-col gap-4 min-w-0">
-      <CartProductsModal
-        open={detailCartId != null}
-        cartId={detailCartId}
-        onOpenChange={(next) => {
-          if (!next) setDetailCartId(null);
-        }}
-      />
+      {detailCartId != null && (
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center gap-2 rounded-panel border border-border-muted bg-surface-muted/40 py-12 text-sm text-text-muted">
+              <Spinner />
+              <span>A carregar…</span>
+            </div>
+          }
+        >
+          <CartProductsModal
+            open
+            cartId={detailCartId}
+            onOpenChange={(next) => {
+              if (!next) setDetailCartId(null);
+            }}
+          />
+        </Suspense>
+      )}
       <SummaryStrip
         items={[
           {

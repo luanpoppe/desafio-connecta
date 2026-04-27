@@ -6,8 +6,8 @@ jest.mock("../pages/CustomersPage", () => ({
 }));
 
 describe("App", () => {
-  it("renders the customers page shell", () => {
+  it("renders the customers page shell", async () => {
     render(<App />);
-    expect(screen.getByTestId("customers-page")).toBeInTheDocument();
+    expect(await screen.findByTestId("customers-page")).toBeInTheDocument();
   });
 });
