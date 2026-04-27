@@ -1,4 +1,4 @@
-import { ExternalApiService } from '@/lib/external-api';
+import { EXTERNAL_API, type ExternalApi } from '@/lib/external-api';
 import { Test } from '@nestjs/testing';
 import type { CartDto, GetCartsResponseDto } from '@/lib/external-api';
 import { HttpExternalCartsGateway } from '../http-external-carts.gateway';
@@ -6,7 +6,7 @@ import { HttpExternalCartsGateway } from '../http-external-carts.gateway';
 describe('HttpExternalCartsGateway', () => {
   let gateway: HttpExternalCartsGateway;
   let externalApi: jest.Mocked<
-    Pick<ExternalApiService, 'getCartsByUser' | 'getCartById'>
+    Pick<ExternalApi, 'getCartsByUser' | 'getCartById'>
   >;
 
   beforeEach(async () => {
@@ -17,13 +17,13 @@ describe('HttpExternalCartsGateway', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         HttpExternalCartsGateway,
-        { provide: ExternalApiService, useValue: externalApi },
+        { provide: EXTERNAL_API, useValue: externalApi },
       ],
     }).compile();
     gateway = moduleRef.get(HttpExternalCartsGateway);
   });
 
-  it('getCartsByUser delegates to ExternalApiService', async () => {
+  it('getCartsByUser delegates to ExternalApi', async () => {
     const payload = {
       carts: [],
       total: 0,
@@ -36,7 +36,7 @@ describe('HttpExternalCartsGateway', () => {
     expect(externalApi.getCartsByUser).toHaveBeenCalledWith(99);
   });
 
-  it('getCartById delegates to ExternalApiService', async () => {
+  it('getCartById delegates to ExternalApi', async () => {
     const cart = {
       id: 5,
       products: [],

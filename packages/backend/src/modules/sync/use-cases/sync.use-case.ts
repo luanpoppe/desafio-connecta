@@ -1,15 +1,22 @@
+import { CACHE, type Cache } from '@/lib/cache/cache.interface';
 import { PrismaService } from '@/lib/database/prisma.service';
-import { ExternalApiService } from '@/lib/external-api';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { EXTERNAL_API, type ExternalApi } from '@/lib/external-api';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { SyncDataHelper } from '../helpers/sync-data.helper';
+import { SyncUsersRedisHelper } from '../helpers/sync-users-redis.helper';
+
+export type SyncDataOptions = {
+  force?: boolean;
+};
 
 @Injectable()
 export class SyncUseCase implements OnModuleInit {
   private readonly logger = new Logger(SyncUseCase.name);
 
   constructor(
-    private readonly externalApiService: ExternalApiService,
+    @Inject(EXTERNAL_API) private readonly externalApi: ExternalApi,
     private readonly prismaService: PrismaService,
+    @Inject(CACHE) private readonly cache: Cache,
   ) {}
 
   onModuleInit(): void {
@@ -23,11 +30,30 @@ export class SyncUseCase implements OnModuleInit {
       });
   }
 
-  async syncData(): Promise<void> {
-    const usersResponse = await this.externalApiService.getUsers();
+  async syncData(options?: SyncDataOptions): Promise<void> {
+    const force = options?.force === true;
+
+    if (!force) {
+      const skip = await SyncUsersRedisHelper.trySkipStartupSyncUsingCache(
+        this.cache,
+        this.logger,
+      );
+
+      if (skip) {
+        return;
+      }
+    }
+
+    const usersResponse = await this.externalApi.getUsers();
 
     await SyncDataHelper.persistExternalUsers(
       this.prismaService,
+      usersResponse.users,
+    );
+
+    await SyncUsersRedisHelper.writeUsersCache(
+      this.cache,
+      this.logger,
       usersResponse.users,
     );
   }

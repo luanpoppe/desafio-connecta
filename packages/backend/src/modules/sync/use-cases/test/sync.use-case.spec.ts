@@ -1,5 +1,6 @@
 import type { PrismaService } from '@/lib/database/prisma.service';
-import type { ExternalApiService } from '@/lib/external-api';
+import type { ExternalApi } from '@/lib/external-api';
+import type { Cache } from '@/lib/cache/cache.interface';
 import { Logger } from '@nestjs/common';
 import { makeExternalUserDto } from '../../mappers/test/external-user.fixture';
 import { SyncUseCase } from '../sync.use-case';
@@ -9,16 +10,29 @@ describe('SyncUseCase', () => {
   const upsert = jest.fn().mockResolvedValue(undefined);
   const externalApiService = {
     getUsers,
-  } as unknown as ExternalApiService;
+  } as unknown as ExternalApi;
 
   const prismaService = {
     user: { upsert },
   } as unknown as PrismaService;
 
+  const redisGet = jest.fn();
+  const redisSet = jest.fn().mockResolvedValue(undefined);
+  const redisDel = jest.fn().mockResolvedValue(undefined);
+  const redisService = {
+    get: redisGet,
+    set: redisSet,
+    del: redisDel,
+  } as unknown as Cache;
+
   beforeEach(() => {
     jest.clearAllMocks();
     upsert.mockResolvedValue(undefined);
+    redisGet.mockResolvedValue(null);
   });
+
+  const createUseCase = () =>
+    new SyncUseCase(externalApiService, prismaService, redisService);
 
   describe('syncData', () => {
     it('fetches users from the external API and upserts each in Prisma', async () => {
@@ -26,8 +40,7 @@ describe('SyncUseCase', () => {
       const u2 = makeExternalUserDto({ id: 11, firstName: 'B' });
       getUsers.mockResolvedValue({ users: [u1, u2] });
 
-      const useCase = new SyncUseCase(externalApiService, prismaService);
-      await useCase.syncData();
+      await createUseCase().syncData();
 
       expect(getUsers).toHaveBeenCalledTimes(1);
       expect(upsert).toHaveBeenCalledTimes(2);
@@ -47,8 +60,7 @@ describe('SyncUseCase', () => {
       );
       getUsers.mockResolvedValue({ users });
 
-      const useCase = new SyncUseCase(externalApiService, prismaService);
-      await useCase.syncData();
+      await createUseCase().syncData();
 
       expect(upsert).toHaveBeenCalledTimes(6);
       expect(upsert).toHaveBeenNthCalledWith(
@@ -60,10 +72,22 @@ describe('SyncUseCase', () => {
     it('does nothing in Prisma when the external API returns no users', async () => {
       getUsers.mockResolvedValue({ users: [] });
 
-      const useCase = new SyncUseCase(externalApiService, prismaService);
-      await useCase.syncData();
+      await createUseCase().syncData();
 
       expect(upsert).not.toHaveBeenCalled();
+    });
+
+    it('when force is true, runs API and upsert even if Redis has cached users', async () => {
+      const cached = makeExternalUserDto({ id: 99, firstName: 'Stale' });
+      const fresh = makeExternalUserDto({ id: 1, firstName: 'Fresh' });
+      redisGet.mockResolvedValue(JSON.stringify([cached]));
+      getUsers.mockResolvedValue({ users: [fresh] });
+
+      await createUseCase().syncData({ force: true });
+
+      expect(redisGet).not.toHaveBeenCalled();
+      expect(getUsers).toHaveBeenCalledTimes(1);
+      expect(upsert).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -91,7 +115,7 @@ describe('SyncUseCase', () => {
     it('logs success when syncData completes', async () => {
       getUsers.mockResolvedValue({ users: [] });
 
-      const useCase = new SyncUseCase(externalApiService, prismaService);
+      const useCase = createUseCase();
       useCase.onModuleInit();
 
       await new Promise<void>((resolve) => {
@@ -107,7 +131,7 @@ describe('SyncUseCase', () => {
     it('logs error when syncData rejects', async () => {
       getUsers.mockRejectedValue(new Error('api down'));
 
-      const useCase = new SyncUseCase(externalApiService, prismaService);
+      const useCase = createUseCase();
       useCase.onModuleInit();
 
       await new Promise<void>((resolve) => {

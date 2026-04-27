@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ListUsersPaginatedUseCase } from './application/use-cases/list-users-paginated.use-case';
-import { USER_REPOSITORY } from './domain/repositories/user.repository.token';
+import { USER_REPOSITORY } from './domain/repositories/user.repository';
 import { UsersController } from './infrastructure/http/users.controller';
 import { PrismaUserRepository } from './infrastructure/repositories/prisma-user.repository';
 
